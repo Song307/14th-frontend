@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아기 사자 대시보드 - 비동기 데이터 연동</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <!-- ========================================
+             명단 조작 컨트롤 영역
+             ======================================== -->
+        <section class="control-section">
+            <div class="control-left">
+                <button id="addBtn" class="control-btn control-btn--primary">아기 사자 추가</button>
+                <button id="deleteBtn" class="control-btn control-btn--secondary">마지막 아기 사자 삭제</button>
+            </div>
+            <div class="control-right">
+                <span class="member-count">총 <span id="memberCount">1</span>명</span>
+            </div>
+        </section>
+
+        <!-- ========================================
+             외부 데이터 불러오기 컨트롤 영역 (4주차 신규)
+             ======================================== -->
+        <section class="async-control-section">
+            <h2 class="async-title">외부 데이터 불러오기</h2>
+            <div class="async-buttons">
+                <button id="addOneBtn" class="control-btn control-btn--async">랜덤 1명 추가</button>
+                <button id="addFiveBtn" class="control-btn control-btn--async">랜덤 5명 추가</button>
+                <button id="refreshAllBtn" class="control-btn control-btn--async">전체 새로고침</button>
+            </div>
+            
+            <!-- 비동기 상태 표시 -->
+            <div id="asyncStatus" class="async-status">
+                <span id="asyncStatusText" class="async-status-text">준비 완료</span>
+                <button id="retryBtn" class="retry-btn" style="display: none;">재시도</button>
+            </div>
+        </section>
+
+        <!-- ========================================
+             아기 사자 추가 폼 (초기 상태: 숨김)
+             ======================================== -->
+        <section id="formSection" class="form-section form-section--hidden">
+            <h2 class="form-title">아기 사자 추가</h2>
+            <form id="addForm" class="add-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputName">이름 *</label>
+                        <input type="text" id="inputName" placeholder="예: Clara Lavigne" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPart">파트 *</label>
+                        <select id="inputPart" required>
+                            <option value="">선택하세요</option>
+                            <option value="Frontend">Frontend</option>
+                            <option value="Backend">Backend</option>
+                            <option value="Design">Design</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputTechs">관심 기술 (쉼표로 분리) *</label>
+                        <input type="text" id="inputTechs" placeholder="예: HTML / CSS, JavaScript, React" required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputIntro">한 줄 소개 (요약 카드용) *</label>
+                        <input type="text" id="inputIntro" placeholder="예: 새로운 기술을 배우고 함께 성장하고 싶습니다." required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputBio">자기소개 (상세 카드용) *</label>
+                        <textarea id="inputBio" rows="4" placeholder="예: 구조적인 UI를 고민하고, 사용자 경험을 개선하기 위한 새로운 기술을 배우고 싶습니다." required></textarea>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row--two-cols">
+                    <div class="form-group">
+                        <label for="inputEmail">이메일 *</label>
+                        <input type="email" id="inputEmail" placeholder="예: lion@example.com" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPhone">전화번호 *</label>
+                        <input type="tel" id="inputPhone" placeholder="예: +1-555-0100" required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row--two-cols">
+                    <div class="form-group">
+                        <label for="inputWebsite">웹사이트</label>
+                        <input type="url" id="inputWebsite" placeholder="예: https://github.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputComment">한 마디</label>
+                        <input type="text" id="inputComment" placeholder="예: 멋진 팀과 함께 성장하겠습니다!">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" id="randomFillBtn" class="btn btn--tertiary">랜덤 값 채우기</button>
+                    <button type="submit" class="btn btn--primary">추가하기</button>
+                    <button type="button" id="cancelBtn" class="btn btn--secondary">취소</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ========================================
+             보기 옵션 영역 (필터/정렬/검색)
+             ======================================== -->
+        <section class="view-options-section">
+            <h2 class="view-options-title">보기 옵션</h2>
+            <div class="view-options">
+                <div class="view-option-group">
+                    <label for="filterPart">파트</label>
+                    <select id="filterPart">
+                        <option value="전체">전체</option>
+                        <option value="Frontend">Frontend</option>
+                        <option value="Backend">Backend</option>
+                        <option value="Design">Design</option>
+                    </select>
+                </div>
+
+                <div class="view-option-group">
+                    <label for="sortBy">정렬</label>
+                    <select id="sortBy">
+                        <option value="최신추가순">최신추가순</option>
+                        <option value="이름순">이름순</option>
+                    </select>
+                </div>
+
+                <div class="view-option-group view-option-group--search">
+                    <label for="searchName">검색</label>
+                    <input type="text" id="searchName" placeholder="이름으로 검색">
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================
+             요약 카드 영역
+             ======================================== -->
+        <section class="cards-section">
+            <h1 class="cards-title">아기 사자 멤버</h1>
+            <div class="cards-grid" id="cardsGrid">
+                <!-- 내 카드 -->
+                <article class="profile-summary-card profile-summary-card--my-card" data-name="송하성" data-part="Frontend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송하성 프로필" class="profile-summary-image">
+                        <span class="profile-badge">HTML / CSS</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송하성</h2>
+                        <p class="profile-summary-part">Frontend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+            </div>
+            <!-- 빈 상태 메시지 -->
+            <div id="emptyState" class="empty-state" style="display: none;">
+                <p>표시할 아기 사자가 없습니다.<br>(필터/검색 조건을 확인해 주세요)</p>
+            </div>
+        </section>
+
+        <!-- ========================================
+             상세 정보 영역
+             ======================================== -->
+        <section class="details-section">
+            <h2 class="details-title">상세 자기소개</h2>
+            <div id="detailsList">
+                <!-- 상세 카드가 동적으로 추가됨 -->
+                
+                <!-- 송하성 상세정보 -->
+                <article class="details-card" data-name="송하성">
+                    <h3 class="details-card-name">송하성</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Frontend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">구조적인 UI를 고민하고, 사용자 경험을 개선하기 위한 새로운 기술을 배우고 싶습니다. 매일 조금씩 나아지는 개발자가 되기 위해 노력하고 있습니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>HTML / CSS</li>
+                                <li>JavaScript</li>
+                                <li>React</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:song@example.com">song@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-1234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">이번 멋쟁이사자처럼 활동을 통해 실제 프로젝트를 경험하고, 함께 성장하는 시간이 되겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <!-- 빈 상태 메시지 (상세 정보) -->
+            <div id="emptyStateDetails" class="empty-state" style="display: none;">
+                <p>표시할 상세 정보가 없습니다.</p>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>

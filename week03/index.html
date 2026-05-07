@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아기 사자 명단 대시보드</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <!-- 명단 조작 컨트롤 영역 -->
+        <section class="control-section">
+            <div class="control-left">
+                <button id="addBtn" class="control-btn control-btn--primary">아기 사자 추가</button>
+                <button id="deleteBtn" class="control-btn control-btn--secondary">마지막 아기 사자 삭제</button>
+            </div>
+            <div class="control-right">
+                <span class="member-count">총 <span id="memberCount">9</span>명</span>
+            </div>
+        </section>
+
+        <!-- 아기 사자 추가 폼 (초기 상태: 숨김) -->
+        <section id="formSection" class="form-section form-section--hidden">
+            <h2 class="form-title">아기 사자 추가</h2>
+            <form id="addForm" class="add-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputName">이름 *</label>
+                        <input type="text" id="inputName" placeholder="예: 송하성" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPart">파트 *</label>
+                        <select id="inputPart" required>
+                            <option value="">선택하세요</option>
+                            <option value="Frontend">Frontend</option>
+                            <option value="Backend">Backend</option>
+                            <option value="Design">Design</option>
+                        </select>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputTechs">관심 기술 (쉼표로 분리) *</label>
+                        <input type="text" id="inputTechs" placeholder="예: HTML / CSS, JavaScript, React" required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputIntro">한 줄 소개 (요약 카드용) *</label>
+                        <input type="text" id="inputIntro" placeholder="예: 새로운 기술을 배우고 함께 성장하고 싶습니다." required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inputBio">자기소개 (상세 카드용) *</label>
+                        <textarea id="inputBio" rows="4" placeholder="예: 구조적인 UI를 고민하고, 사용자 경험을 개선하기 위한 새로운 기술을 배우고 싶습니다." required></textarea>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row--two-cols">
+                    <div class="form-group">
+                        <label for="inputEmail">이메일 *</label>
+                        <input type="email" id="inputEmail" placeholder="예: lion@example.com" required>
+                        <span class="error-message"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPhone">전화번호 *</label>
+                        <input type="tel" id="inputPhone" placeholder="예: 010-1234-5678" required>
+                        <span class="error-message"></span>
+                    </div>
+                </div>
+
+                <div class="form-row form-row--two-cols">
+                    <div class="form-group">
+                        <label for="inputWebsite">웹사이트</label>
+                        <input type="url" id="inputWebsite" placeholder="예: https://github.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputComment">한 마디</label>
+                        <input type="text" id="inputComment" placeholder="예: 멋진 팀과 함께 성장하겠습니다!">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">추가하기</button>
+                    <button type="button" id="cancelBtn" class="btn btn--secondary">취소</button>
+                </div>
+            </form>
+        </section>
+
+        <!-- 요약 카드 영역 -->
+        <section class="cards-section">
+            <h1 class="cards-title">아기 사자 멤버</h1>
+            <div class="cards-grid" id="cardsGrid">
+                <!-- 내 카드 -->
+                <article class="profile-summary-card profile-summary-card--my-card" data-name="송하성" data-part="Frontend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송하성 프로필" class="profile-summary-image">
+                        <span class="profile-badge">HTML / CSS</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송하성</h2>
+                        <p class="profile-summary-part">Frontend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송아기사자 -->
+                <article class="profile-summary-card" data-name="송아기사자" data-part="Frontend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송아기사자 프로필" class="profile-summary-image">
+                        <span class="profile-badge">HTML / CSS</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송아기사자</h2>
+                        <p class="profile-summary-part">Frontend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송아기호랑이 -->
+                <article class="profile-summary-card" data-name="송아기호랑이" data-part="Frontend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송아기호랑이 프로필" class="profile-summary-image">
+                        <span class="profile-badge">JavaScript</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송아기호랑이</h2>
+                        <p class="profile-summary-part">Frontend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송어른사자 -->
+                <article class="profile-summary-card" data-name="송어른사자" data-part="Frontend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송어른사자 프로필" class="profile-summary-image">
+                        <span class="profile-badge">React</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송어른사자</h2>
+                        <p class="profile-summary-part">Frontend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송어른호랑이 -->
+                <article class="profile-summary-card" data-name="송어른호랑이" data-part="Backend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송어른호랑이 프로필" class="profile-summary-image">
+                        <span class="profile-badge">Node.js</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송어른호랑이</h2>
+                        <p class="profile-summary-part">Backend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송아기판다 -->
+                <article class="profile-summary-card" data-name="송아기판다" data-part="Backend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송아기판다 프로필" class="profile-summary-image">
+                        <span class="profile-badge">Python</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송아기판다</h2>
+                        <p class="profile-summary-part">Backend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송어른판다 -->
+                <article class="profile-summary-card" data-name="송어른판다" data-part="Backend" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송어른판다 프로필" class="profile-summary-image">
+                        <span class="profile-badge">Java</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송어른판다</h2>
+                        <p class="profile-summary-part">Backend</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송아기곰 -->
+                <article class="profile-summary-card" data-name="송아기곰" data-part="Design" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송아기곰 프로필" class="profile-summary-image">
+                        <span class="profile-badge">Design</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송아기곰</h2>
+                        <p class="profile-summary-part">Design</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+
+                <!-- 송어른곰 -->
+                <article class="profile-summary-card" data-name="송어른곰" data-part="Design" data-intro="새로운 기술을 배우고 함께 성장하고 싶습니다.">
+                    <div class="profile-image-container">
+                        <img src="logo_like_lion.png" alt="송어른곰 프로필" class="profile-summary-image">
+                        <span class="profile-badge">Figma</span>
+                    </div>
+                    <div class="profile-summary-content">
+                        <h2 class="profile-summary-name">송어른곰</h2>
+                        <p class="profile-summary-part">Design</p>
+                        <p class="profile-summary-intro">새로운 기술을 배우고 함께 성장하고 싶습니다.</p>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <!-- 상세 정보 영역 -->
+        <section class="details-section">
+            <h2 class="details-title">상세 자기소개</h2>
+            <div id="detailsList">
+                <!-- 상세 카드가 동적으로 추가됨 -->
+
+                <!-- 송하성 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송하성</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Frontend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">구조적인 UI를 고민하고, 사용자 경험을 개선하기 위한 새로운 기술을 배우고 싶습니다. 매일 조금씩 나아지는 개발자가 되기 위해 노력하고 있습니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>HTML / CSS</li>
+                                <li>JavaScript</li>
+                                <li>React</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:song@example.com">song@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-1234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">이번 멋쟁이사자처럼 활동을 통해 실제 프로젝트를 경험하고, 함께 성장하는 시간이 되겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송아기사자 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송아기사자</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Frontend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">새로운 기술을 배우고 함께 성장하고 싶습니다. 마크업부터 스타일링까지 전체 프론트엔드 기본을 다지고 있습니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>HTML / CSS</li>
+                                <li>기본 마크업</li>
+                                <li>스타일링</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:lion@example.com">lion@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-2234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">좋은 기초를 다지고 열심히 배우겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송아기호랑이 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송아기호랑이</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Frontend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">JavaScript를 통해 웹에서 동적인 경험을 만드는 데 관심이 있습니다. 상호작용하는 웹을 만드는 것을 좋아합니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>JavaScript</li>
+                                <li>DOM 조작</li>
+                                <li>이벤트 처리</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:tiger@example.com">tiger@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-3234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">동적인 웹 경험을 만드는 기술자가 되겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송어른사자 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송어른사자</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Frontend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">React를 통해 모던한 웹 애플리케이션을 구축하고 있습니다. 재사용 가능한 컴포넌트를 설계하는 것에 관심이 많습니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>React</li>
+                                <li>Component Design</li>
+                                <li>State Management</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:adult-lion@example.com">adult-lion@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-4234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">React로 멋진 웹 서비스를 만들겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송어른호랑이 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송어른호랑이</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Backend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">Node.js를 사용한 백엔드 개발에 매력을 느낍니다. 확장 가능하고 안정적인 서버를 만드는 것이 목표입니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>Node.js</li>
+                                <li>Express</li>
+                                <li>API 설계</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:adult-tiger@example.com">adult-tiger@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-5234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">견고한 백엔드를 만드는 개발자가 되겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송아기판다 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송아기판다</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Backend</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">Python의 간결함과 쌍으로 백엔드 개발을 배우고 있습니다. 데이터 처리와 로직 구현에 관심이 있습니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>Python</li>
+                                <li>데이터 처리</li>
+                                <li>기본 로직</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:panda@example.com">panda@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-6234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">Python으로 멋진 백엔드를 만들겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송아기곰 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송아기곰</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Design</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">UI/UX 디자인의 기초를 배우고 있습니다. 사용자의 입장에서 좋은 경험을 만드는 것이 목표입니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>Design</li>
+                                <li>UI/UX</li>
+                                <li>기본 개념</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:bear@example.com">bear@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-7234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">사용자를 생각하는 디자이너가 되겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- 송어른곰 상세정보 -->
+                <article class="details-card">
+                    <h3 class="details-card-name">송어른곰</h3>
+                    <div class="details-grid">
+                        <div class="detail-group">
+                            <h4 class="detail-label">기본 정보</h4>
+                            <dl class="detail-list">
+                                <dt>소속 파트</dt>
+                                <dd>Design</dd>
+                                <dt>동아리명</dt>
+                                <dd>멋쟁이사자처럼</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">자기소개</h4>
+                            <p class="detail-description">Figma를 통해 디자인을 하고 있습니다. 프로토타입 제작과 협업 디자인에 관심이 있습니다.</p>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">관심 기술</h4>
+                            <ul class="detail-tech-list">
+                                <li>Figma</li>
+                                <li>프로토타입</li>
+                                <li>협업 디자인</li>
+                            </ul>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">연락처</h4>
+                            <dl class="detail-contact-list">
+                                <dt>이메일</dt>
+                                <dd><a href="mailto:bear-adult@example.com">bear-adult@example.com</a></dd>
+                                <dt>웹사이트</dt>
+                                <dd><a href="https://github.com" target="_blank">https://github.com</a></dd>
+                                <dt>휴대전화</dt>
+                                <dd>010-8234-5678</dd>
+                            </dl>
+                        </div>
+
+                        <div class="detail-group">
+                            <h4 class="detail-label">한마디</h4>
+                            <p class="detail-description">Figma로 멋진 디자인을 만들겠습니다!</p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
